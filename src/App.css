@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --underline: rgba(255, 255, 255, 0.18);
+  --spine: #000;
+  --cover: #2d2d2d;
+  --bg: #4d4d4d;
+  --insert: #ececec;
+  --page: #f5f5f5;
+  background: #000;
+  color: #808080;
+  font-family: "Google Sans", Inter, system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  width: 100vw;
+  background: #000;
+  overflow-x: hidden;
+}
+
+body::before {
+  --size: 45px;
+  --line: rgba(255, 255, 255, 0.16);
+  content: '';
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+      var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+      var(--size) var(--size);
+  mask: linear-gradient(-20deg, transparent 50%, white);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  --size: 45px;
+  --line: rgba(255, 255, 255, 0.16);
+  content: '';
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 100% 100% /
+      var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 100% 100% /
+      var(--size) var(--size);
+  mask: linear-gradient(160deg, transparent 50%, white);
+  pointer-events: none;
+  z-index: 0;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+.book-scroll {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: calc(((var(--page-count) + 2) * 25) * 1vh);
+  min-height: 100vh;
+  background: transparent;
+}
+
+.devscape {
+  position: fixed;
+  top: 18%;
+  left: 50%;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  color: #f2f2f2;
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.85;
+}
+
+.devscape span {
+  position: relative;
+  display: inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.82) 42%,
+    rgba(255, 255, 255, 0.38) 86%,
+    rgba(255, 255, 255, 0) 95%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 48%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 48%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+}
+
+.devscape span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at bottom, rgba(0, 0, 0, 0.55), transparent 55%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.book {
+  z-index: 2;
+}
+
+h1 {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 10;
+  margin: 0;
+  color: #808080;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.page .page__number {
+  position: absolute;
+  bottom: 1rem;
+  color: #808080;
+  font-size: 1vmin;
+}
+
+.page__half--front .page__number {
+  right: 1rem;
+}
+
+.page__half--back .page__number {
+  left: 1rem;
+}
+
+.page__half {
+  --rotation: 0;
+  --coefficient: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(0 0.5% 0 0.5%);
+  transform: rotateY(calc(var(--rotation) * 1deg))
+    translate3d(0, 0, calc((0.5 * var(--coefficient)) * 1px));
+}
+
+.page__half--front {
+  --rotation: 0;
+  --coefficient: 0;
+  border-radius: 0 5% 5% 0;
+  backface-visibility: hidden;
+}
+
+.page__half--back {
+  --rotation: 180;
+  --coefficient: 2;
+  border-radius: 5% 0 0 5%;
+}
+
+.book {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 38vmin;
+  height: 50vmin;
+  min-width: 210px;
+  min-height: 280px;
+  perspective: 1200px;
+  transform: translate(var(--book-anchor-shift), -50%) scale(var(--book-scale));
+  transform-style: preserve-3d;
+}
+
+.book__insert {
+  position: absolute;
+  top: 50%;
+  right: -1rem;
+  width: 94%;
+  height: 94%;
+  background: var(--insert);
+  border-radius: 5% 0 0 5%;
+  transform: translate(0, -50%);
+}
+
+.book__spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 100%;
+  background: var(--spine);
+  transform: translate3d(0, 0, -13px) scaleX(1) rotateY(0deg);
+  transform-origin: 0 50%;
+}
+
+.book__page {
+  position: absolute;
+  top: 50%;
+  left: 2%;
+  z-index: calc(((var(--page-count) + 2) - var(--page-index)) * 2);
+  width: 94%;
+  height: 94%;
+  border-radius: 0 5% 5% 0;
+  transform: translate(0, -50%) translateZ(var(--page-z)) rotateY(var(--page-rotate));
+  transform-origin: 0% 50%;
+}
+
+.book__cover {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--cover);
+  border-radius: 0 5% 5% 0;
+}
+
+.book__cover--front {
+  transform-origin: 0 50%;
+}
+
+.book__cover--front .page__half--back {
+  border-right: 1rem solid var(--spine);
+}
+
+.book__cover--back {
+  transform-origin: 0% 50%;
+}
+
+.book__cover--back .page__half--front {
+  border-left: 1rem solid var(--spine);
+}
+
+.book__cover--back .book__insert {
+  left: 0;
+  border-radius: 0 5% 5% 0;
+}
+
+.book__page:not(.book__cover) .page__half {
+  background:
+    repeating-linear-gradient(
+        0deg,
+        transparent 0 1rem,
+        var(--underline) 1rem calc(1rem + 1px),
+        transparent calc(1rem + 1px)
+      )
+      0 1rem / 100% 100% no-repeat,
+    var(--page);
+}
+
+.sticker {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+  height: 15%;
+  transform: rotate(-25deg);
+}
+
+.logo {
+  opacity: var(--logo-opacity);
+}
+
+.book img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+
+.book img.sticker {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+  top: auto;
+  left: auto;
+  z-index: 3;
+  width: auto;
+  height: 18%;
+  object-fit: contain;
+  transform: rotate(-25deg);
+  transform-origin: center;
+}
+
+.book .logo {
+  width: auto;
+  height: 25%;
+}
+
+.book a {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
