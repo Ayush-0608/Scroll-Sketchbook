@@ -15,7 +15,7 @@ function easeInOut(x) {
 }
 
 function Sticker() {
-  return <img className="sticker" src={`${base}/logo.svg"`} alt="Project logo" />
+  return <img className="sticker" src={`${base}/logo.svg`} alt="Project logo" />
 }
 
 function PageSide({ side, children, pageNumber }) {
