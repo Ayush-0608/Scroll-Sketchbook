@@ -3,13 +3,13 @@
 }
 
 :root {
-  --underline: rgba(255, 255, 255, 0.18);
-  --spine: #000;
-  --cover: #2d2d2d;
+  --underline: rgba(84, 94, 132, 0.18);
+  --spine: #201f27;
+  --cover: #e1d60d;
   --bg: #4d4d4d;
-  --insert: #ececec;
-  --page: #f5f5f5;
-  background: #000;
+  --insert: #5b2e0ebb;
+  --page: #f6f9faf0;
+  background: #000000;
   color: #808080;
   font-family: "Google Sans", Inter, system-ui, sans-serif;
 }
@@ -25,41 +25,37 @@ body,
 body {
   position: relative;
   width: 100vw;
-  background: #000;
+  background: #000000;
   overflow-x: hidden;
 }
 
 body::before {
   --size: 45px;
-  --line: rgba(255, 255, 255, 0.16);
+  --line: rgb(60, 206, 254, 0.64);
   content: '';
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   background:
-    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% /
-      var(--size) var(--size),
-    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
-      var(--size) var(--size);
-  mask: linear-gradient(-20deg, transparent 50%, white);
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
+  mask: linear-gradient(-20deg, transparent 50%, rgb(255, 255, 255));
   pointer-events: none;
   z-index: 0;
 }
 
 body::after {
   --size: 45px;
-  --line: rgba(255, 255, 255, 0.16);
+  --line: rgba(60, 205, 254, 0.64);
   content: '';
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   background:
-    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 100% 100% /
-      var(--size) var(--size),
-    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 100% 100% /
-      var(--size) var(--size);
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 100% 100% / var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 100% 100% / var(--size) var(--size);
   mask: linear-gradient(160deg, transparent 50%, white);
   pointer-events: none;
   z-index: 0;
@@ -74,7 +70,7 @@ a {
   position: relative;
   z-index: 1;
   width: 100vw;
-  height: calc(((var(--page-count) + 2) * 25) * 1vh);
+  height: calc(((var(--page-count) + 0.1) * 50) * 1vh);
   min-height: 100vh;
   background: transparent;
 }
@@ -92,22 +88,21 @@ a {
   line-height: 0.8;
   pointer-events: none;
   user-select: none;
-  opacity: 0.85;
+  opacity: 1.0;
 }
 
 .devscape span {
   position: relative;
   display: inline-block;
+  padding-bottom: 0.1em;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.82) 42%,
-    rgba(255, 255, 255, 0.38) 86%,
-    rgba(255, 255, 255, 0) 95%
-  );
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgb(255, 255, 255) 20%,
+      rgb(255, 255, 255) 35%,
+      rgb(255, 255, 255) 50%);
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 48%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 0%, black 48%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
 }
@@ -146,9 +141,9 @@ h1 {
 
 .page .page__number {
   position: absolute;
-  bottom: 1rem;
-  color: #808080;
-  font-size: 1vmin;
+  bottom: 0.4rem;
+  color: #000000;
+  font-size: 1.25vmin;
 }
 
 .page__half--front .page__number {
@@ -171,8 +166,7 @@ h1 {
   width: 100%;
   height: 100%;
   clip-path: inset(0 0.5% 0 0.5%);
-  transform: rotateY(calc(var(--rotation) * 1deg))
-    translate3d(0, 0, calc((0.5 * var(--coefficient)) * 1px));
+  transform: rotateY(calc(var(--rotation) * 1deg)) translate3d(0, 0, calc((0.5 * var(--coefficient)) * 1px));
 }
 
 .page__half--front {
@@ -190,14 +184,14 @@ h1 {
 
 .book {
   position: fixed;
-  top: 50%;
+  top: 60%;
   left: 50%;
-  width: 38vmin;
-  height: 50vmin;
+  width: 61vmin;
+  height: 80vmin;
   min-width: 210px;
   min-height: 280px;
   perspective: 1200px;
-  transform: translate(var(--book-anchor-shift), -50%) scale(var(--book-scale));
+  transform: translate(var(--book-anchor-shift), var(--book-y-shift, -50%)) scale(var(--book-scale));
   transform-style: preserve-3d;
 }
 
@@ -208,6 +202,10 @@ h1 {
   width: 94%;
   height: 94%;
   background: var(--insert);
+  background-image: url('/page-texture.jpg');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
   border-radius: 5% 0 0 5%;
   transform: translate(0, -50%);
 }
@@ -241,7 +239,12 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--cover);
+  background-color: var(--cover);
+
+  background-image: url('/leather-texture-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
   border-radius: 0 5% 5% 0;
 }
 
@@ -267,15 +270,18 @@ h1 {
 }
 
 .book__page:not(.book__cover) .page__half {
-  background:
-    repeating-linear-gradient(
-        0deg,
-        transparent 0 1rem,
-        var(--underline) 1rem calc(1rem + 1px),
-        transparent calc(1rem + 1px)
-      )
-      0 1rem / 100% 100% no-repeat,
-    var(--page);
+  background-color: var(--page);
+  background-image:
+    repeating-linear-gradient(0deg,
+      transparent 0 1rem,
+      var(--underline) 1rem calc(1rem + 1px),
+      transparent calc(1rem + 1px)),
+    url('/page-texture.jpg');
+
+  background-size: 100% 100%, cover;
+  background-position: 0 1rem, center;
+  background-repeat: no-repeat, no-repeat;
+  background-blend-mode: normal, multiply;
 }
 
 .sticker {

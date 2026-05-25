@@ -1,12 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { backCoverLogo, pageSpreads } from './bookImages'
 import './App.css'
 
-const PAGE_SCROLL = 0.25
+const PAGE_SCROLL = 0.5
 const PAGE_COUNT = pageSpreads.length * 2
 
 function clamp(value, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max)
+}
+
+function easeInOut(x) {
+  return x < 0.5 ? 2 * x * x : 1 - 2 * (1 - x) * (1 - x);
 }
 
 function Sticker() {
@@ -24,22 +28,36 @@ function PageSide({ side, children, pageNumber }) {
 
 function SketchLink({ sketch }) {
   return (
-    <a href={sketch.href} target="_blank" rel="noreferrer noopener" aria-label={sketch.alt}>
+    <button className="sketchButton" onClick={() => onClick(sketch)} aria-label={`View details for ${sketch.alt}`}>
       <img src={sketch.image} alt={sketch.alt} />
-    </a>
+    </button>
   )
 }
 
 function App() {
   const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight)
   const [scrollY, setScrollY] = useState(() => window.scrollY)
+  const targetScroll = useRef(window.scrollY)
+  const currentScroll = useRef(window.scrollY)
+
 
   useEffect(() => {
     let frameId = 0
 
     const updateScroll = () => {
-      cancelAnimationFrame(frameId)
-      frameId = requestAnimationFrame(() => setScrollY(window.scrollY))
+      targetScroll.current = window.scrollY
+    }
+
+    const updateLoop = () => {
+      const diff = targetScroll.current - currentScroll.current
+
+      let move = diff * 0.08
+      move = clamp(move, -30, 30)
+
+      currentScroll.current += move
+      setScrollY(currentScroll.current)
+
+      frameId = requestAnimationFrame(updateLoop)
     }
 
     const updateViewport = () => {
@@ -49,6 +67,7 @@ function App() {
 
     window.addEventListener('scroll', updateScroll, { passive: true })
     window.addEventListener('resize', updateViewport)
+    updateLoop()
 
     return () => {
       cancelAnimationFrame(frameId)
@@ -61,7 +80,9 @@ function App() {
   const bookOpenProgress = clamp(scrollY / step)
   const bookScale = 0.5 + bookOpenProgress * 0.5
   const bookAnchorShift = `${-50 + bookOpenProgress * 50}%`
+  const bookYShift = `${-50 - (bookOpenProgress * 15)}%`
   const logoOpacity = clamp((scrollY - 13.5 * step) / (0.5 * step))
+  const devscapeOpacity = 1 - bookOpenProgress
 
   const pages = useMemo(() => {
     return [
@@ -76,7 +97,8 @@ function App() {
     const zProgress = index === pages.length - 1 ? 0 : clamp((scrollY - (index + 1) * step) / (0.5 * step))
     const initialZ = index === 0 ? 13 : -index
     const finalZ = index === 0 ? -13 : index
-    const rotateY = -turnProgress * (180 - index / 2)
+    const easedTurn = easeInOut(turnProgress)
+    const rotateY = -easedTurn * (180 - index / 2)
     const z = initialZ + (finalZ - initialZ) * zProgress
 
     return {
@@ -89,9 +111,9 @@ function App() {
   return (
     <main
       className="book-scroll"
-      style={{ '--page-count': PAGE_COUNT, '--book-scale': bookScale, '--book-anchor-shift': bookAnchorShift }}
+      style={{ '--page-count': PAGE_COUNT, '--book-scale': bookScale, '--book-anchor-shift': bookAnchorShift, '--book-y-shift': bookYShift }}
     >
-      <div className="devscape" aria-label="devscape">
+      <div className="devscape" aria-label="devscape" style={{ opacity: devscapeOpacity }}>
         <span>Devscape</span>
       </div>
       <h1>Scroll</h1>
