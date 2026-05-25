@@ -4,6 +4,7 @@ import './App.css'
 
 const PAGE_SCROLL = 0.5
 const PAGE_COUNT = pageSpreads.length * 2
+const base = import.meta.env.BASE_URL;
 
 function clamp(value, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max)
@@ -14,7 +15,7 @@ function easeInOut(x) {
 }
 
 function Sticker() {
-  return <img className="sticker" src="/logo.svg" alt="Project logo" />
+  return <img className="sticker" src={`${base}/logo.svg"`} alt="Project logo" />
 }
 
 function PageSide({ side, children, pageNumber }) {
