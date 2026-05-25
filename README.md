@@ -7,8 +7,6 @@
 
 Scroll Sketchbook is a React mini project built with Vite. It creates an animated 3D sketchbook where pages flip as the user scrolls, using React state, scroll listeners, CSS transforms, and Tailwind CSS setup through Vite.
 
-https://github.com/user-attachments/assets/be954525-d0b3-4de3-a4ad-9e21345b0b9b
-
 ## Prerequisites
 
 Before starting, install:
