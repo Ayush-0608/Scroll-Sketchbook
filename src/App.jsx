@@ -53,7 +53,7 @@ function App() {
       const diff = targetScroll.current - currentScroll.current
 
       let move = diff * 0.08
-      move = clamp(move, -30, 30)
+      move = clamp(move, -15, 15)
 
       currentScroll.current += move
       setScrollY(currentScroll.current)
